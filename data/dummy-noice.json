@@ -1,30 +1,35 @@
 {
   "noices": [
     {
+      "id": "asdasdasdasd",
       "title": "Header styling",
       "note": "I should style a header of home screen",
       "isDone": true,
       "isFavorite": false
     },
     {
+      "id": "asdasdasdas",
       "title": "Noices",
       "note": "I should style a component for Noices",
       "isDone": false,
       "isFavorite": false
     },
     {
+      "id": "asdasdasda",
       "title": "Add button",
       "note": "I should style a add button for home screen",
       "isDone": false,
       "isFavorite": true
     },
     {
+      "id": "asdasdasd",
       "title": "header buttons",
       "note": "I should make this buttons work",
       "isDone": false,
       "isFavorite": true
     },
     {
+      "id": "asdasdas",
       "title": "really bored",
       "note": "I'm really bored with this dummy datas :( and I dont even know what to say",
       "isDone": true,

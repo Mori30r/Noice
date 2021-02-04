@@ -1,16 +1,18 @@
 import React from "react";
 import { EvilIcons } from "@expo/vector-icons";
+import * as noices from "../data/dummy-noice.json";
 import {
   Text,
   View,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
 import Circle from "../components/Circle";
 import ProgressBar from "../components/ProgressBar";
-
 const HomeScreen = () => {
+  const noiceList = noices["noices"];
   return (
     <View style={styles.container}>
       <Circle />
@@ -25,10 +27,27 @@ const HomeScreen = () => {
         </View>
         <View style={styles.nav}>
           <Text style={styles.headerText}>All Noices 😁</Text>
-          <Text style={styles.smallText}>9/20 Of Noices Are Done !</Text>
+          <Text style={styles.smallText}>
+            You Have {noiceList.length} Noices
+          </Text>
           <ProgressBar />
         </View>
       </View>
+      <FlatList
+        style={styles.cardContainer}
+        data={noiceList}
+        renderItem={(noice) => {
+          return (
+            <View style={styles.card}>
+              <View style={styles.cardDetailContainer}>
+                <Text style={styles.cardTitle}>{noice.item.title}</Text>
+                <Text style={styles.cardNote}>{noice.item.note}</Text>
+                <Text style={styles.cardVoiceContainer}></Text>
+              </View>
+            </View>
+          );
+        }}
+      />
     </View>
   );
 };
@@ -44,8 +63,8 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#a68eff",
     height: height / 3.5,
-    borderBottomLeftRadius: width / 10,
-    borderBottomRightRadius: width / 10,
+    borderBottomLeftRadius: width / 20,
+    borderBottomRightRadius: width / 20,
     justifyContent: "space-around",
   },
   iconsContainer: {
@@ -74,6 +93,33 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "200",
     color: "white",
+  },
+  main: {},
+  card: {
+    backgroundColor: "#058578",
+    height: "auto",
+    marginHorizontal: width / 20,
+    marginVertical: height / 60,
+    borderTopEndRadius: 60,
+    borderTopStartRadius: 20,
+    borderBottomStartRadius: 20,
+    borderBottomEndRadius: 10,
+    padding: 15,
+  },
+  cardDetailContainer: {
+    justifyContent: "space-between",
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  cardNote: {
+    fontSize: 15,
+  },
+  cardVoiceContainer: {},
+  cardContainer: {
+    flex: 1,
+    marginBottom: height / 20,
   },
 });
 
