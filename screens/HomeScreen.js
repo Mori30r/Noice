@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { EvilIcons, Ionicons } from "@expo/vector-icons";
+import React from "react";
+import { EvilIcons } from "@expo/vector-icons";
 import * as noices from "../data/dummy-noice.json";
-import Slider from "@react-native-community/slider";
 import {
   Text,
   View,
@@ -9,10 +8,10 @@ import {
   Dimensions,
   TouchableOpacity,
   FlatList,
-  TouchableNativeFeedback,
 } from "react-native";
 import Circle from "../components/Circle";
 import ProgressBar from "../components/ProgressBar";
+import Card from "../components/Card";
 const HomeScreen = () => {
   const noiceList = noices["noices"];
   return (
@@ -41,32 +40,7 @@ const HomeScreen = () => {
         style={styles.cardContainer}
         data={noiceList}
         renderItem={(noice) => {
-          return (
-            <View style={styles.card}>
-              <View style={styles.cardDetailContainer}>
-                <Text style={styles.cardTitle}>{noice.item.title}</Text>
-                <Text style={styles.cardNote}>{noice.item.note}</Text>
-                <View style={styles.cardEnd}>
-                  <View style={styles.VoiceContainer}>
-                    <TouchableOpacity>
-                      <Ionicons name="play-circle" color="#000000" size={30} />
-                    </TouchableOpacity>
-                    <Slider
-                      style={styles.voiceSlider}
-                      minimumValue={0}
-                      maximumValue={1}
-                      minimumTrackTintColor="#FFFFFF"
-                      maximumTrackTintColor="#000000"
-                      thumbTintColor="#000000"
-                    />
-                  </View>
-                  <TouchableOpacity style={styles.favoriteIcon}>
-                    <Ionicons name="star-outline" color="#000000" size={20} />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          );
+          return <Card noice={noice} />;
         }}
       />
     </View>
@@ -86,6 +60,7 @@ const styles = StyleSheet.create({
     height: height / 4,
     borderBottomLeftRadius: width / 20,
     borderBottomRightRadius: width / 20,
+    elevation: 10,
   },
   iconsContainer: {
     flexDirection: "row",
@@ -116,50 +91,9 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   main: {},
-  card: {
-    backgroundColor: "#058578",
-    height: "auto",
-    marginHorizontal: width / 20,
-    marginVertical: height / 60,
-    borderTopEndRadius: 60,
-    borderTopStartRadius: 20,
-    borderBottomStartRadius: 20,
-    borderBottomEndRadius: 10,
-    padding: 15,
-  },
-  cardDetailContainer: {
-    justifyContent: "space-between",
-  },
-  cardTitle: {
-    paddingBottom: 5,
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  cardNote: {
-    fontSize: 15,
-    paddingHorizontal: 5,
-  },
-  cardEnd: {
-    paddingTop: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  VoiceContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   cardContainer: {
     flex: 1,
     marginBottom: height / 17,
-  },
-  voiceSlider: {
-    width: width / 1.5,
-  },
-  favoriteIcon: {},
-  progressBarContainer: {
-    justifyContent: "space-between",
-    alignItems: "center",
   },
 });
 
