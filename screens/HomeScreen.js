@@ -12,19 +12,29 @@ import {
 import Circle from "../components/Circle";
 import ProgressBar from "../components/ProgressBar";
 import Card from "../components/Card";
-const HomeScreen = () => {
+import Icon from "../components/Icon";
+
+const HomeScreen = (props) => {
   const noiceList = noices["noices"];
   return (
     <View style={styles.container}>
       <Circle />
       <View style={styles.header}>
         <View style={styles.iconsContainer}>
-          <TouchableOpacity>
-            <EvilIcons name="gear" size={30} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <EvilIcons name="search" size={30} color="white" />
-          </TouchableOpacity>
+          <Icon
+            iconName="gear"
+            iconSize={30}
+            iconColor="white"
+            onPress={() => {}}
+          />
+          <Icon
+            iconName="search"
+            iconSize={30}
+            iconColor="white"
+            onPress={() => {
+              props.navigation.navigate("search");
+            }}
+          />
         </View>
         <View style={styles.nav}>
           <Text style={styles.headerText}>All Noices 😁</Text>
