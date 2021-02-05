@@ -1,34 +1,30 @@
 import React from "react";
-import { EvilIcons } from "@expo/vector-icons";
 import * as noices from "../data/dummy-noice.json";
-import {
-  Text,
-  View,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
+import { Text, View, StyleSheet, Dimensions, FlatList } from "react-native";
 import Circle from "../components/Circle";
 import ProgressBar from "../components/ProgressBar";
 import Card from "../components/Card";
 import Icon from "../components/Icon";
+import FloatingActionButton from "../components/FloatingActionButton";
 
 const HomeScreen = (props) => {
   const noiceList = noices["noices"];
   return (
     <View style={styles.container}>
+      <FloatingActionButton />
       <Circle />
       <View style={styles.header}>
         <View style={styles.iconsContainer}>
           <Icon
             iconName="gear"
+            pack="evilIcons"
             iconSize={30}
             iconColor="white"
             onPress={() => {}}
           />
           <Icon
             iconName="search"
+            pack="evilIcons"
             iconSize={30}
             iconColor="white"
             onPress={() => {
@@ -104,6 +100,10 @@ const styles = StyleSheet.create({
   cardContainer: {
     flex: 1,
     marginBottom: height / 17,
+  },
+  progressBarContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

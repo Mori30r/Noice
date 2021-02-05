@@ -1,16 +1,16 @@
 import React from "react";
 
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { EvilIcons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native";
+import { EvilIcons, Ionicons } from "@expo/vector-icons";
 
-const Icon = ({ onPress, iconName, iconSize, iconColor }) => {
+const Icon = ({ pack, onPress, iconName, iconSize, iconColor }) => {
+  const iconPackages = {
+    evilIcons: <EvilIcons name={iconName} size={iconSize} color={iconColor} />,
+    ionIcons: <Ionicons name={iconName} size={iconSize} color={iconColor} />,
+  };
   return (
-    <TouchableOpacity onPress={onPress}>
-      <EvilIcons name={iconName} size={iconSize} color={iconColor} />
-    </TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>{iconPackages[pack]}</TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Icon;

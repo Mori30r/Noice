@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     marginBottom: height / 4.7,
   },
   sortContainer: {
+    elevation: 10,
     flexDirection: "row",
     backgroundColor: "grey",
     height: height / 12,
