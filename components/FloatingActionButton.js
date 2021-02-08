@@ -1,20 +1,18 @@
 import React from "react";
 
-import { View, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import Icon from "./Icon";
 
-const FloatingActionButton = () => {
+const FloatingActionButton = (props) => {
   return (
     <View style={styles.floatingActionButton}>
-      <TouchableOpacity>
-        <Icon
-          pack="ionIcons"
-          iconColor="white"
-          iconName="add"
-          iconSize={35}
-          onPress={() => {}}
-        />
-      </TouchableOpacity>
+      <Icon
+        pack="ionIcons"
+        iconColor="white"
+        iconName="add"
+        iconSize={35}
+        onPress={props.onPress}
+      />
     </View>
   );
 };

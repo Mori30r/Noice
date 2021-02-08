@@ -8,10 +8,11 @@ import Icon from "../components/Icon";
 import FloatingActionButton from "../components/FloatingActionButton";
 
 const HomeScreen = (props) => {
+  console.log(props.navigation);
   const noiceList = noices["noices"];
   return (
     <View style={styles.container}>
-      <FloatingActionButton />
+      <FloatingActionButton onPress={() => props.navigation.navigate("add")} />
       <Circle />
       <View style={styles.header}>
         <View style={styles.iconsContainer}>
