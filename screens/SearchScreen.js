@@ -8,10 +8,10 @@ import {
   Dimensions,
   Text,
 } from "react-native";
-import * as noice from "../data/dummy-noice.json";
+import { useSelector } from "react-redux";
 import Card from "../components/Card";
-const noiceList = noice["noices"];
 const SearchScreen = () => {
+  const noices = useSelector((state) => state.noice.noices);
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
@@ -24,7 +24,7 @@ const SearchScreen = () => {
       </View>
       <FlatList
         style={styles.cardContainer}
-        data={noiceList}
+        data={noices}
         renderItem={(noice) => {
           return <Card noice={noice} />;
         }}

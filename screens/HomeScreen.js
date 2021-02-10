@@ -1,15 +1,14 @@
 import React from "react";
-import * as noices from "../data/dummy-noice.json";
 import { Text, View, StyleSheet, Dimensions, FlatList } from "react-native";
 import Circle from "../components/Circle";
 import ProgressBar from "../components/ProgressBar";
 import Card from "../components/Card";
 import Icon from "../components/Icon";
 import FloatingActionButton from "../components/FloatingActionButton";
+import { useSelector } from "react-redux";
 
 const HomeScreen = (props) => {
-  console.log(props.navigation);
-  const noiceList = noices["noices"];
+  const noices = useSelector((state) => state.noice.noices);
   return (
     <View style={styles.container}>
       <FloatingActionButton onPress={() => props.navigation.navigate("add")} />
@@ -37,7 +36,7 @@ const HomeScreen = (props) => {
           <Text style={styles.headerText}>All Noices 😁</Text>
           <View style={styles.progressBarContainer}>
             <Text style={styles.smallText}>
-              You Have {noiceList.length} Noices
+              You Have {noices.length} Noices
             </Text>
             <ProgressBar />
           </View>
@@ -45,7 +44,7 @@ const HomeScreen = (props) => {
       </View>
       <FlatList
         style={styles.cardContainer}
-        data={noiceList}
+        data={noices}
         renderItem={(noice) => {
           return <Card noice={noice} />;
         }}
