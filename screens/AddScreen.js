@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   Text,
   View,
@@ -8,14 +8,27 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-
+import { addNoiceAction } from "../store/actions/noiceActions";
 const AddScreen = (props) => {
+  const dispatch = useDispatch();
+  const [title, setTitle] = useState(null);
+  const [note, setNote] = useState(null);
+  const handleSave = () => {
+    dispatch(
+      addNoiceAction({
+        title,
+        note,
+      })
+    );
+  };
   return (
     <View style={styles.container}>
       <View style={styles.twoInputsContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.InputLabel}>Title</Text>
           <TextInput
+            value={title}
+            onChangeText={(value) => setTitle(value)}
             maxLength={40}
             placeholder="Enter Your Title"
             style={styles.titleInput}
@@ -25,6 +38,8 @@ const AddScreen = (props) => {
           <Text style={styles.InputLabel}>Descriptions</Text>
           <View style={styles.descriptionInputContainer}>
             <TextInput
+              value={note}
+              onChangeText={(value) => setNote(value)}
               multiline
               numberOfLines={20}
               textAlignVertical="top"
@@ -50,7 +65,10 @@ const AddScreen = (props) => {
           <TouchableOpacity style={styles.bottomButtonTouchable}>
             <View style={styles.bottomRecordButton} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomButtonTouchable}>
+          <TouchableOpacity
+            onPress={handleSave}
+            style={styles.bottomButtonTouchable}
+          >
             <Text style={styles.bottomButton}>Save</Text>
           </TouchableOpacity>
         </View>
