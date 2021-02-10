@@ -1,5 +1,12 @@
 import React from "react";
-import { Text, View, StyleSheet, Dimensions, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  FlatList,
+  ToastAndroid,
+} from "react-native";
 import Circle from "../components/Circle";
 import ProgressBar from "../components/ProgressBar";
 import Card from "../components/Card";
@@ -9,6 +16,9 @@ import { useSelector } from "react-redux";
 
 const HomeScreen = (props) => {
   const noices = useSelector((state) => state.noice.noices);
+  const showSuccessfulToast = () => {
+    ToastAndroid.show("Your New Noice Added Successfully !", ToastAndroid.LONG);
+  };
   return (
     <View style={styles.container}>
       <FloatingActionButton onPress={() => props.navigation.navigate("add")} />
@@ -42,6 +52,7 @@ const HomeScreen = (props) => {
           </View>
         </View>
       </View>
+      {props.route.params && showSuccessfulToast()}
       <FlatList
         style={styles.cardContainer}
         data={noices}

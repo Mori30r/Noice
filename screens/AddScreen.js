@@ -13,13 +13,22 @@ const AddScreen = (props) => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState(null);
   const [note, setNote] = useState(null);
+  const [error, setError] = useState(false);
   const handleSave = () => {
-    dispatch(
-      addNoiceAction({
-        title,
-        note,
-      })
-    );
+    if (title) {
+      setError(false);
+      dispatch(
+        addNoiceAction({
+          title,
+          note,
+        })
+      );
+      setTitle(null);
+      setNote(null);
+      props.navigation.push("home", { added: true });
+    } else {
+      setError(true);
+    }
   };
   return (
     <View style={styles.container}>
@@ -31,8 +40,9 @@ const AddScreen = (props) => {
             onChangeText={(value) => setTitle(value)}
             maxLength={40}
             placeholder="Enter Your Title"
-            style={styles.titleInput}
+            style={[styles.titleInput, error && { borderColor: "red" }]}
           />
+          {error && <Text style={styles.errorText}>Title Is Required</Text>}
         </View>
         <View style={styles.descriptionContainer}>
           <Text style={styles.InputLabel}>Descriptions</Text>
@@ -156,6 +166,10 @@ const styles = StyleSheet.create({
   voiceSection: {
     flex: 4,
     margin: 10,
+  },
+  errorText: {
+    color: "red",
+    paddingHorizontal: 5,
   },
 });
 
