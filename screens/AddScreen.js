@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   Text,
@@ -7,9 +7,50 @@ import {
   TextInput,
   Dimensions,
   TouchableOpacity,
+  Button,
 } from "react-native";
+import { Audio } from "expo-av";
 import { addNoiceAction } from "../store/actions/noiceActions";
 const AddScreen = (props) => {
+  const [record, setRecord] = useState(undefined);
+  const [audioUri, setAudioUri] = useState(undefined);
+  const [sound, setSound] = useState(undefined);
+  const startAudioRecord = async () => {
+    try {
+      await Audio.requestPermissionsAsync();
+      const recording = new Audio.Recording();
+      await recording.prepareToRecordAsync(
+        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
+      );
+      // recording.setOnRecordingStatusUpdate((s) =>
+      //   console.log("hey this is status ", s)
+      // );
+      await recording.startAsync();
+      setRecord(recording);
+      await recording.getStatusAsync();
+    } catch (e) {
+      console.log("Failed To Start Recording ", e);
+    }
+  };
+  const stopAudioRecord = async () => {
+    setRecord(undefined);
+    await record.stopAndUnloadAsync();
+    const newAudioUri = record.getURI();
+    setAudioUri(newAudioUri);
+  };
+  const playRecordedAudio = async () => {
+    if (audioUri) {
+      try {
+        const newSound = new Audio.Sound();
+        await newSound.loadAsync({ uri: audioUri });
+        await newSound.playAsync();
+        await newSound.getStatusAsync().then((s) => console.log(s));
+        setSound(sound);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
   const dispatch = useDispatch();
   const [title, setTitle] = useState(null);
   const [note, setNote] = useState(null);
@@ -30,6 +71,12 @@ const AddScreen = (props) => {
       setError(true);
     }
   };
+
+  // to unload sound for moving between screens
+  useEffect(() => {
+    return sound ? () => sound.unloadAsync() : undefined;
+  }, [sound]);
+
   return (
     <View style={styles.container}>
       <View style={styles.twoInputsContainer}>
@@ -75,6 +122,11 @@ const AddScreen = (props) => {
           <TouchableOpacity style={styles.bottomButtonTouchable}>
             <View style={styles.bottomRecordButton} />
           </TouchableOpacity>
+          <Button
+            title={record ? "stop" : "start"}
+            onPress={record ? stopAudioRecord : startAudioRecord}
+          />
+          {audioUri && <Button title={"Play"} onPress={playRecordedAudio} />}
           <TouchableOpacity
             onPress={handleSave}
             style={styles.bottomButtonTouchable}

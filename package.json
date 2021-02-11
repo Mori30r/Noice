@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.4",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/slider": "3.0.3",
     "@react-navigation/native": "^5.9.2",
@@ -15,6 +16,8 @@
     "@types/react-native": "^0.63.45",
     "@types/react-navigation": "^3.4.0",
     "expo": "~40.0.0",
+    "expo-av": "~8.7.0",
+    "expo-permissions": "~10.0.0",
     "expo-status-bar": "~1.0.3",
     "react": "16.13.1",
     "react-dom": "16.13.1",
