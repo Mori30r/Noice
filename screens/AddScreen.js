@@ -7,14 +7,19 @@ import {
   TextInput,
   Dimensions,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import { Audio } from "expo-av";
 import { addNoiceAction } from "../store/actions/noiceActions";
+import VoiceContainer from "../components/VoiceContainer";
 const AddScreen = (props) => {
   const [record, setRecord] = useState(undefined);
+  const [isRecorded, setIsRecorded] = useState(false);
   const [audioUri, setAudioUri] = useState(undefined);
   const [sound, setSound] = useState(undefined);
+  const [recordedSeconds, setRecordedSeconds] = useState(0);
+  const [timeOfVoice, setTimeOfVoice] = useState(0);
+  const [voicePosition, setVoicePosition] = useState(0);
+  const [playVoiceFinished, setPlayVoiceFinished] = useState(false);
   const startAudioRecord = async () => {
     try {
       await Audio.requestPermissionsAsync();
@@ -22,12 +27,11 @@ const AddScreen = (props) => {
       await recording.prepareToRecordAsync(
         Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
       );
-      // recording.setOnRecordingStatusUpdate((s) =>
-      //   console.log("hey this is status ", s)
-      // );
+      recording.setOnRecordingStatusUpdate((recordingStatus) => {
+        convertMilliSecondsToTime(recordingStatus.durationMillis);
+      });
       await recording.startAsync();
       setRecord(recording);
-      await recording.getStatusAsync();
     } catch (e) {
       console.log("Failed To Start Recording ", e);
     }
@@ -37,6 +41,7 @@ const AddScreen = (props) => {
     await record.stopAndUnloadAsync();
     const newAudioUri = record.getURI();
     setAudioUri(newAudioUri);
+    setIsRecorded(true);
   };
   const playRecordedAudio = async () => {
     if (audioUri) {
@@ -44,12 +49,27 @@ const AddScreen = (props) => {
         const newSound = new Audio.Sound();
         await newSound.loadAsync({ uri: audioUri });
         await newSound.playAsync();
-        await newSound.getStatusAsync().then((s) => console.log(s));
+        await newSound.setOnPlaybackStatusUpdate((playingStatus) => {
+          setVoicePosition(playingStatus.positionMillis);
+          setPlayVoiceFinished(playingStatus.didJustFinish);
+        });
         setSound(sound);
       } catch (e) {
         console.log(e);
       }
     }
+  };
+  const convertMilliSecondsToTime = (milliSeconds) => {
+    const timeInSeconds = Math.floor(milliSeconds / 1000);
+    const minutes = Math.floor(timeInSeconds / 60);
+    const seconds = timeInSeconds % 60;
+    // 00:00
+    setRecordedSeconds(
+      `${minutes < 10 ? "0" : ""}${minutes}:${
+        seconds < 10 ? "0" : ""
+      }${seconds}`
+    );
+    setTimeOfVoice(milliSeconds);
   };
   const dispatch = useDispatch();
   const [title, setTitle] = useState(null);
@@ -76,7 +96,6 @@ const AddScreen = (props) => {
   useEffect(() => {
     return sound ? () => sound.unloadAsync() : undefined;
   }, [sound]);
-
   return (
     <View style={styles.container}>
       <View style={styles.twoInputsContainer}>
@@ -109,7 +128,21 @@ const AddScreen = (props) => {
       <View style={styles.bottomNav}>
         <View style={styles.voiceSection}>
           <View style={styles.voiceContainer}>
-            <View style={styles.voiceFreq} />
+            <View style={styles.voiceFreq}>
+              {isRecorded && (
+                <VoiceContainer
+                  isFinished={playVoiceFinished}
+                  position={voicePosition}
+                  seconds={timeOfVoice}
+                  onPress={playRecordedAudio}
+                />
+              )}
+              <Text>
+                {recordedSeconds
+                  ? recordedSeconds
+                  : "Press Record Button To Start !"}
+              </Text>
+            </View>
           </View>
         </View>
         <View style={styles.bottomButtonsContainer}>
@@ -119,14 +152,16 @@ const AddScreen = (props) => {
           >
             <Text style={styles.bottomButton}>Cancel</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.bottomButtonTouchable}>
-            <View style={styles.bottomRecordButton} />
-          </TouchableOpacity>
-          <Button
-            title={record ? "stop" : "start"}
+          <TouchableOpacity
             onPress={record ? stopAudioRecord : startAudioRecord}
-          />
-          {audioUri && <Button title={"Play"} onPress={playRecordedAudio} />}
+            style={styles.bottomButtonTouchable}
+          >
+            {record ? (
+              <View style={styles.bottomStopRecordButton} />
+            ) : (
+              <View style={styles.bottomRecordButton} />
+            )}
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={handleSave}
             style={styles.bottomButtonTouchable}
@@ -182,17 +217,13 @@ const styles = StyleSheet.create({
   voiceContainer: {
     alignSelf: "center",
     width: width / 1.1,
-    height: height / 6,
+    height: height / 8,
     borderRadius: 10,
     backgroundColor: "grey",
     justifyContent: "center",
     alignItems: "center",
   },
-  voiceFreq: {
-    width: width / 1.5,
-    height: 1,
-    backgroundColor: "black",
-  },
+  voiceFreq: {},
   bottomButtonsContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -212,8 +243,12 @@ const styles = StyleSheet.create({
     height: width / 8,
     borderRadius: width / 4,
     backgroundColor: "red",
-    borderColor: "black",
-    borderWidth: 0.5,
+  },
+  bottomStopRecordButton: {
+    width: width / 10,
+    height: width / 10,
+    backgroundColor: "red",
+    borderRadius: 5,
   },
   voiceSection: {
     flex: 4,

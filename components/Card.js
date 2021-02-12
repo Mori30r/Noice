@@ -7,7 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Slider from "@react-native-community/slider";
+import VoiceContainer from "./VoiceContainer";
 
 const Card = ({ noice }) => {
   return (
@@ -16,19 +16,7 @@ const Card = ({ noice }) => {
         <Text style={styles.cardTitle}>{noice.item.title}</Text>
         <Text style={styles.cardNote}>{noice.item.note}</Text>
         <View style={styles.cardEnd}>
-          <View style={styles.VoiceContainer}>
-            <TouchableOpacity>
-              <Ionicons name="play-circle" color="#000000" size={40} />
-            </TouchableOpacity>
-            <Slider
-              style={styles.voiceSlider}
-              minimumValue={0}
-              maximumValue={1}
-              minimumTrackTintColor="#FFFFFF"
-              maximumTrackTintColor="#000000"
-              thumbTintColor="#000000"
-            />
-          </View>
+          <VoiceContainer />
           <TouchableOpacity style={styles.favoriteIcon}>
             <Ionicons name="star-outline" color="#000000" size={20} />
           </TouchableOpacity>
@@ -68,13 +56,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-  },
-  VoiceContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  voiceSlider: {
-    width: width / 1.5,
   },
   favoriteIcon: {},
   progressBarContainer: {
