@@ -1,28 +1,25 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 
-const VoiceContainer = ({ onPress, seconds, position, isFinished }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  // const [sliderValue, setSliderValue] = useState(0);
+const VoiceContainer = ({ onPress, seconds, position }) => {
   return (
     <View style={styles.VoiceContainer}>
       <TouchableOpacity
         onPress={() => {
           onPress();
-          setIsPlaying(!isPlaying);
         }}
       >
         <Ionicons
-          name={isPlaying ? "pause-circle" : "play-circle"}
+          name={position ? "pause-circle" : "play-circle"}
           color="#000000"
           size={40}
         />
       </TouchableOpacity>
       <Slider
-        value={isFinished ? 0 : position}
+        value={position ? position : 0}
         // onValueChange={(value) => setSliderValue(value)}
         style={styles.voiceSlider}
         minimumValue={0}

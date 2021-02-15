@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Text,
   View,
@@ -8,70 +8,17 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Audio } from "expo-av";
 import { addNoiceAction } from "../store/actions/noiceActions";
+import { recordAudio } from "../helpers/audio/recordAudio";
+import { stopAudioRecord } from "../helpers/audio/stopRecordAudio";
 import VoiceContainer from "../components/VoiceContainer";
+import { playRecordedAudio } from "../helpers/audio/playRecordedAudio";
+import { convertMilliSecondsToTime } from "../helpers/functions/convertMilliToTime";
+
 const AddScreen = (props) => {
-  const [record, setRecord] = useState(undefined);
-  const [isRecorded, setIsRecorded] = useState(false);
-  const [audioUri, setAudioUri] = useState(undefined);
-  const [sound, setSound] = useState(undefined);
-  const [recordedSeconds, setRecordedSeconds] = useState(0);
-  const [timeOfVoice, setTimeOfVoice] = useState(0);
-  const [voicePosition, setVoicePosition] = useState(0);
-  const [playVoiceFinished, setPlayVoiceFinished] = useState(false);
-  const startAudioRecord = async () => {
-    try {
-      await Audio.requestPermissionsAsync();
-      const recording = new Audio.Recording();
-      await recording.prepareToRecordAsync(
-        Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-      );
-      recording.setOnRecordingStatusUpdate((recordingStatus) => {
-        convertMilliSecondsToTime(recordingStatus.durationMillis);
-      });
-      await recording.startAsync();
-      setRecord(recording);
-    } catch (e) {
-      console.log("Failed To Start Recording ", e);
-    }
-  };
-  const stopAudioRecord = async () => {
-    setRecord(undefined);
-    await record.stopAndUnloadAsync();
-    const newAudioUri = record.getURI();
-    setAudioUri(newAudioUri);
-    setIsRecorded(true);
-  };
-  const playRecordedAudio = async () => {
-    if (audioUri) {
-      try {
-        const newSound = new Audio.Sound();
-        await newSound.loadAsync({ uri: audioUri });
-        await newSound.playAsync();
-        await newSound.setOnPlaybackStatusUpdate((playingStatus) => {
-          setVoicePosition(playingStatus.positionMillis);
-          setPlayVoiceFinished(playingStatus.didJustFinish);
-        });
-        setSound(sound);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-  const convertMilliSecondsToTime = (milliSeconds) => {
-    const timeInSeconds = Math.floor(milliSeconds / 1000);
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = timeInSeconds % 60;
-    // 00:00
-    setRecordedSeconds(
-      `${minutes < 10 ? "0" : ""}${minutes}:${
-        seconds < 10 ? "0" : ""
-      }${seconds}`
-    );
-    setTimeOfVoice(milliSeconds);
-  };
   const dispatch = useDispatch();
+  const voiceOption = useSelector((state) => state.voiceOption.voiceOption);
+  console.log(voiceOption);
   const [title, setTitle] = useState(null);
   const [note, setNote] = useState(null);
   const [error, setError] = useState(false);
@@ -92,10 +39,13 @@ const AddScreen = (props) => {
     }
   };
 
-  // to unload sound for moving between screens
-  useEffect(() => {
-    return sound ? () => sound.unloadAsync() : undefined;
-  }, [sound]);
+  // // to unload sound for moving between screens
+  // const unloadSound = async () => {
+  //   voiceOption.sound && (await voiceOption.sound.unloadAsync());
+  // };
+  // useEffect(() => {
+  //   unloadSound();
+  // }, [voiceOption.sound]);
   return (
     <View style={styles.container}>
       <View style={styles.twoInputsContainer}>
@@ -129,17 +79,18 @@ const AddScreen = (props) => {
         <View style={styles.voiceSection}>
           <View style={styles.voiceContainer}>
             <View style={styles.voiceFreq}>
-              {isRecorded && (
+              {voiceOption.isRecorded && (
                 <VoiceContainer
-                  isFinished={playVoiceFinished}
-                  position={voicePosition}
-                  seconds={timeOfVoice}
-                  onPress={playRecordedAudio}
+                  position={voiceOption.voicePosition}
+                  seconds={voiceOption.timeOfVoice}
+                  onPress={() =>
+                    playRecordedAudio(voiceOption.audioUri, dispatch)
+                  }
                 />
               )}
               <Text>
-                {recordedSeconds
-                  ? recordedSeconds
+                {voiceOption.timeOfVoice
+                  ? convertMilliSecondsToTime(voiceOption.timeOfVoice)
                   : "Press Record Button To Start !"}
               </Text>
             </View>
@@ -153,10 +104,14 @@ const AddScreen = (props) => {
             <Text style={styles.bottomButton}>Cancel</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={record ? stopAudioRecord : startAudioRecord}
+            onPress={() =>
+              voiceOption.recordInstance
+                ? stopAudioRecord(dispatch, voiceOption.recordInstance)
+                : recordAudio(dispatch)
+            }
             style={styles.bottomButtonTouchable}
           >
-            {record ? (
+            {voiceOption.recordInstance ? (
               <View style={styles.bottomStopRecordButton} />
             ) : (
               <View style={styles.bottomRecordButton} />
