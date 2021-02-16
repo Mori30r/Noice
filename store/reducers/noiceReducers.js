@@ -1,24 +1,28 @@
-import { ADD_NOTES } from "../actions/noiceActions";
+import { ADD_NOICES, GET_NOICES } from "../actions/noiceActions";
 import { Noice } from "../../models/Noice";
 import "react-native-get-random-values";
-import { v4 as uuid } from "uuid";
 
 const initialState = {
   noices: [],
 };
 export const noiceReducers = (state = initialState, action) => {
   switch (action.type) {
-    case ADD_NOTES:
+    case ADD_NOICES:
       const newNoice = new Noice(
-        undefined,
-        action.addedNoice.title,
-        action.addedNoice.note,
+        action.payload.audioUri,
+        action.payload.title,
+        action.payload.note,
         false,
         false,
-        uuid()
+        action.payload.id,
+        action.payload.voiceDuration
       );
       return {
         noices: state.noices.concat(newNoice),
+      };
+    case GET_NOICES:
+      return {
+        noices: action.payload,
       };
     default:
       return state;

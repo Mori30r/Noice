@@ -4,6 +4,7 @@ import {
   SET_IS_RECORDED,
   SET_SOUND_TO_PLAY,
   SET_TIME_OF_VOICE,
+  VOICE_OPTION_INIT,
   VOICE_PLAYING_FINISHED,
   VOICE_PLAYING_POSITION,
 } from "../actions/voiceOptionActions";
@@ -22,7 +23,6 @@ const initialState = {
 export const voiceOptionReducers = (state = initialState, action) => {
   switch (action.type) {
     case RECORD_INSTANCE:
-      console.log(state);
       return {
         ...state,
         voiceOption: {
@@ -73,9 +73,19 @@ export const voiceOptionReducers = (state = initialState, action) => {
           timeOfVoice: action.payload,
         },
       };
+    case VOICE_OPTION_INIT:
+      return {
+        voiceOption: {
+          recordInstance: null,
+          isRecorded: false,
+          audioUri: null,
+          sound: null,
+          voicePosition: 0,
+          voiceDidJustFinished: false,
+          timeOfVoice: null,
+        },
+      };
     default:
       return state;
   }
 };
-
-//// TODO: make cases to 1

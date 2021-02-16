@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -12,12 +12,23 @@ import ProgressBar from "../components/ProgressBar";
 import Card from "../components/Card";
 import Icon from "../components/Icon";
 import FloatingActionButton from "../components/FloatingActionButton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { getNoiceAction } from "../store/actions/noiceActions";
 
 const HomeScreen = (props) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    return () => {
+      dispatch(getNoiceAction());
+    };
+  }, []);
+
   const noices = useSelector((state) => state.noice.noices);
   const showSuccessfulToast = () => {
-    ToastAndroid.show("Your New Noice Added Successfully !", ToastAndroid.LONG);
+    ToastAndroid.show(
+      "Your New Noice Added Successfully !",
+      ToastAndroid.SHORT
+    );
   };
   return (
     <View style={styles.container}>
@@ -54,6 +65,7 @@ const HomeScreen = (props) => {
       </View>
       {props.route.params && showSuccessfulToast()}
       <FlatList
+        keyExtractor={(item) => item.id}
         style={styles.cardContainer}
         data={noices}
         renderItem={(noice) => {

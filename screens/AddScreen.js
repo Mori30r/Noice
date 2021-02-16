@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Text,
@@ -14,31 +14,33 @@ import { stopAudioRecord } from "../helpers/audio/stopRecordAudio";
 import VoiceContainer from "../components/VoiceContainer";
 import { playRecordedAudio } from "../helpers/audio/playRecordedAudio";
 import { convertMilliSecondsToTime } from "../helpers/functions/convertMilliToTime";
+import { v4 as uuid } from "uuid";
+import { voiceOptionInit } from "../store/actions/voiceOptionActions";
 
 const AddScreen = (props) => {
   const dispatch = useDispatch();
   const voiceOption = useSelector((state) => state.voiceOption.voiceOption);
-  console.log(voiceOption);
   const [title, setTitle] = useState(null);
   const [note, setNote] = useState(null);
   const [error, setError] = useState(false);
+  const [audioUri, setAudioUri] = useState(null);
+  const [voiceDuration, setVoiceDuration] = useState(null);
+  useEffect(() => {
+    setAudioUri(voiceOption.audioUri);
+    setVoiceDuration(voiceOption.timeOfVoice);
+  }, [voiceOption]);
   const handleSave = () => {
     if (title) {
       setError(false);
-      dispatch(
-        addNoiceAction({
-          title,
-          note,
-        })
-      );
+      dispatch(addNoiceAction(uuid(), title, note, audioUri, voiceDuration));
       setTitle(null);
       setNote(null);
+      dispatch(voiceOptionInit());
       props.navigation.push("home", { added: true });
     } else {
       setError(true);
     }
   };
-
   // // to unload sound for moving between screens
   // const unloadSound = async () => {
   //   voiceOption.sound && (await voiceOption.sound.unloadAsync());
