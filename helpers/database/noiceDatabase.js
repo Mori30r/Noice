@@ -7,8 +7,8 @@ export const initDatabase = () => {
       tx.executeSql(
         "create table if not exists noice (id text not null, title text not null, note text not null, audioUri text not null, isDone integer not null, isFavorite integer not null, voiceDuration integer not null );",
         [],
-        () => {
-          resolve();
+        (_, result) => {
+          resolve(result);
         },
         (_, err) => reject(err)
       );
@@ -48,6 +48,19 @@ export const fetchNoices = () => {
         (_, result) => {
           resolve(result);
         },
+        (_, err) => reject(err)
+      );
+    });
+  });
+};
+
+export const getNoice = (id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "select * from noice where id=?",
+        [id],
+        (_, result) => resolve(result),
         (_, err) => reject(err)
       );
     });

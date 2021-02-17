@@ -17,7 +17,7 @@ export const addNoiceAction = (id, title, note, audioUri, voiceDuration) => {
         id,
         title,
         note,
-        audioUri,
+        newPath,
         0, //isDone
         0, //isFavorite
         voiceDuration

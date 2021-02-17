@@ -16,6 +16,7 @@
     "@types/react-native": "^0.63.45",
     "@types/react-navigation": "^3.4.0",
     "expo": "~40.0.0",
+    "expo-app-loading": "^1.0.1",
     "expo-av": "~8.7.0",
     "expo-file-system": "~9.3.0",
     "expo-permissions": "~10.0.0",

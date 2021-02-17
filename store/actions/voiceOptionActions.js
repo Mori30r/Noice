@@ -6,6 +6,7 @@ export const VOICE_PLAYING_POSITION = "VOICE_PLAYING_POSITION";
 export const VOICE_PLAYING_FINISHED = "VOICE_PLAYING_FINISHED";
 export const SET_TIME_OF_VOICE = "SET_TIME_OF_VOICE";
 export const VOICE_OPTION_INIT = "VOICE_OPTION_INIT";
+export const SET_VOICE_ID = "SET_VOICE_ID";
 
 export const recordInstanceAdd = (recordInstance) => {
   return { type: RECORD_INSTANCE, payload: recordInstance };
@@ -37,4 +38,8 @@ export const setTimeOfVoice = (timeOfVoice) => {
 
 export const voiceOptionInit = () => {
   return { type: VOICE_OPTION_INIT };
+};
+
+export const setVoiceID = (voiceId) => {
+  return { type: SET_VOICE_ID, payload: voiceId };
 };

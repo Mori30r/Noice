@@ -4,6 +4,7 @@ import {
   SET_IS_RECORDED,
   SET_SOUND_TO_PLAY,
   SET_TIME_OF_VOICE,
+  SET_VOICE_ID,
   VOICE_OPTION_INIT,
   VOICE_PLAYING_FINISHED,
   VOICE_PLAYING_POSITION,
@@ -11,6 +12,7 @@ import {
 
 const initialState = {
   voiceOption: {
+    id: null,
     recordInstance: null,
     isRecorded: false,
     audioUri: null,
@@ -83,6 +85,13 @@ export const voiceOptionReducers = (state = initialState, action) => {
           voicePosition: 0,
           voiceDidJustFinished: false,
           timeOfVoice: null,
+        },
+      };
+    case SET_VOICE_ID:
+      return {
+        voiceOption: {
+          ...state.voiceOption,
+          id: action.payload,
         },
       };
     default:

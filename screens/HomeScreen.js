@@ -18,9 +18,7 @@ import { getNoiceAction } from "../store/actions/noiceActions";
 const HomeScreen = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
-    return () => {
-      dispatch(getNoiceAction());
-    };
+    dispatch(getNoiceAction());
   }, []);
 
   const noices = useSelector((state) => state.noice.noices);

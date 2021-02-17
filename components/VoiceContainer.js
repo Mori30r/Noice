@@ -1,10 +1,11 @@
 import React from "react";
-
+import { useSelector } from "react-redux";
 import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "@react-native-community/slider";
 
-const VoiceContainer = ({ onPress, seconds, position }) => {
+const VoiceContainer = ({ onPress, seconds, position, id }) => {
+  const voiceOption = useSelector((state) => state.voiceOption.voiceOption);
   return (
     <View style={styles.VoiceContainer}>
       <TouchableOpacity
@@ -13,13 +14,16 @@ const VoiceContainer = ({ onPress, seconds, position }) => {
         }}
       >
         <Ionicons
-          name={position ? "pause-circle" : "play-circle"}
+          name={
+            id === voiceOption.id && position ? "pause-circle" : "play-circle"
+          }
           color="#000000"
           size={40}
         />
       </TouchableOpacity>
       <Slider
-        value={position ? position : 0}
+        // position ? position : 0
+        value={id === voiceOption.id ? position : 0}
         // onValueChange={(value) => setSliderValue(value)}
         style={styles.voiceSlider}
         minimumValue={0}
