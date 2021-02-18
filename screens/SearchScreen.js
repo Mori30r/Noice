@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
@@ -6,25 +6,74 @@ import {
   TextInput,
   FlatList,
   Dimensions,
-  Text,
 } from "react-native";
 import { useSelector } from "react-redux";
 import Card from "../components/Card";
+import PressText from "../components/PressText";
 const SearchScreen = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [sortValue, setSortValue] = useState("recently");
+  const [filteredNoices, setFilteredNoices] = useState([]);
   const noices = useSelector((state) => state.noice.noices);
+
+  const sortNoices = (search, sort) => {
+    // to filter by searchValue
+    const newNoiceList = noices.filter((item) =>
+      item.title.toLowerCase().includes(search.toLowerCase())
+    );
+    // to filter by sortValue
+    switch (sort) {
+      case "recently":
+        return setFilteredNoices(newNoiceList);
+      case "isDone":
+        return setFilteredNoices(
+          newNoiceList.filter((item) => item.isDone === true)
+        );
+      case "isFavorite":
+        return setFilteredNoices(
+          newNoiceList.filter((item) => item.isFavorite === true)
+        );
+    }
+  };
+
+  useEffect(() => {
+    sortNoices(searchValue, sortValue);
+    // to run when screen showed, text changed and also sort changed
+  }, [searchValue, noices, sortValue]);
+
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.searchInput} placeholder="Search..." />
+        <TextInput
+          style={styles.searchInput}
+          value={searchValue}
+          onChangeText={(value) => setSearchValue(value)}
+          placeholder="Search..."
+        />
       </View>
       <View style={styles.sortContainer}>
-        <Text style={styles.sortText}>Important</Text>
-        <Text style={styles.sortText}>Done</Text>
-        <Text style={styles.sortTextActive}>Recently</Text>
+        <PressText
+          onPress={() => setSortValue("isFavorite")}
+          isActive={sortValue === "isFavorite"}
+        >
+          Favorites
+        </PressText>
+        <PressText
+          onPress={() => setSortValue("isDone")}
+          isActive={sortValue === "isDone"}
+        >
+          Done
+        </PressText>
+        <PressText
+          onPress={() => setSortValue("recently")}
+          isActive={sortValue === "recently"}
+        >
+          Recently
+        </PressText>
       </View>
       <FlatList
         style={styles.cardContainer}
-        data={noices}
+        data={filteredNoices}
         renderItem={(noice) => {
           return <Card noice={noice} />;
         }}
@@ -32,6 +81,7 @@ const SearchScreen = () => {
     </View>
   );
 };
+
 const { width, height } = Dimensions.get("screen");
 const styles = StyleSheet.create({
   container: {},
@@ -56,13 +106,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 40,
     marginBottom: 20,
-  },
-  sortText: {
-    fontSize: 15,
-  },
-  sortTextActive: {
-    fontSize: 15,
-    fontWeight: "bold",
   },
 });
 
