@@ -26,12 +26,10 @@ const SearchScreen = () => {
       case "recently":
         return setFilteredNoices(newNoiceList);
       case "isDone":
-        return setFilteredNoices(
-          newNoiceList.filter((item) => item.isDone === true)
-        );
+        return setFilteredNoices(newNoiceList.filter((item) => item.isDone));
       case "isFavorite":
         return setFilteredNoices(
-          newNoiceList.filter((item) => item.isFavorite === true)
+          newNoiceList.filter((item) => item.isFavorite)
         );
     }
   };
