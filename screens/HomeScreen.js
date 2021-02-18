@@ -57,7 +57,10 @@ const HomeScreen = (props) => {
             <Text style={styles.smallText}>
               You Have {noices.length} Noices
             </Text>
-            <ProgressBar />
+            <ProgressBar
+              length={noices.length}
+              isDone={noices.filter((item) => item.isDone).length}
+            />
           </View>
         </View>
       </View>

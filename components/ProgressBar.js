@@ -2,10 +2,16 @@ import React from "react";
 
 import { View, StyleSheet, Dimensions } from "react-native";
 
-const ProgressBar = () => {
+const ProgressBar = ({ length, isDone }) => {
+  const fullPercentageOfProgressBar = (isDone * 100) / length;
   return (
     <View style={styles.progressBarContainer}>
-      <View style={styles.progressBarFull} />
+      <View
+        style={[
+          styles.progressBarFull,
+          { width: `${fullPercentageOfProgressBar}%` },
+        ]}
+      />
     </View>
   );
 };
@@ -21,7 +27,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   progressBarFull: {
-    width: "50%",
     height: 8,
     backgroundColor: "green",
     borderRadius: 10,
