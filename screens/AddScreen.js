@@ -88,6 +88,7 @@ const AddScreen = (props) => {
                   onPress={() =>
                     playRecordedAudio(voiceOption.audioUri, dispatch)
                   }
+                  id={"add-screen"}
                 />
               )}
               <Text>
@@ -101,7 +102,10 @@ const AddScreen = (props) => {
         <View style={styles.bottomButtonsContainer}>
           <TouchableOpacity
             style={styles.bottomButtonTouchable}
-            onPress={() => props.navigation.goBack()}
+            onPress={() => {
+              props.navigation.goBack();
+              dispatch(voiceOptionInit());
+            }}
           >
             <Text style={styles.bottomButton}>Cancel</Text>
           </TouchableOpacity>

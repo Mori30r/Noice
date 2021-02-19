@@ -1,4 +1,8 @@
-import { ADD_NOICES, GET_NOICES } from "../actions/noiceActions";
+import {
+  ADD_NOICES,
+  GET_NOICES,
+  TOGGLE_FAVORITE,
+} from "../actions/noiceActions";
 import { Noice } from "../../models/Noice";
 import "react-native-get-random-values";
 
@@ -23,6 +27,17 @@ export const noiceReducers = (state = initialState, action) => {
     case GET_NOICES:
       return {
         noices: action.payload,
+      };
+    case TOGGLE_FAVORITE:
+      const thisNoice = state.noices.find(
+        (item) => action.payload.id === item.id
+      );
+      return {
+        noices: state.noices.map((item) =>
+          item.id === action.payload.id
+            ? { ...thisNoice, isFavorite: action.payload.isFavorite }
+            : item
+        ),
       };
     default:
       return state;

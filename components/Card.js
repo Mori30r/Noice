@@ -10,20 +10,24 @@ import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import VoiceContainer from "./VoiceContainer";
 import { playRecordedAudio } from "../helpers/audio/playRecordedAudio";
-import { getNoice } from "../helpers/database/noiceDatabase";
 import { setVoiceID } from "../store/actions/voiceOptionActions";
+import { toggleFavoriteAction } from "../store/actions/noiceActions";
 
 const Card = ({ noice }) => {
+  console.log(noice);
   const dispatch = useDispatch();
-  // const [currentNoice, setCurrentNoice] = useState(null);
-  const handleOnPressPlay = async () => {
-    const currentNoice = await getNoice(noice.item.id).then((r) => {
-      return r.rows._array[0];
-    });
-    await dispatch(setVoiceID(currentNoice.id));
-    playRecordedAudio(currentNoice.audioUri, dispatch);
+
+  const handleOnPressFavorite = async () => {
+    await dispatch(toggleFavoriteAction(noice.item.id, noice.item.isFavorite));
   };
+
+  const handleOnPressPlay = async () => {
+    await dispatch(setVoiceID(noice.item.id));
+    playRecordedAudio(noice.item.audioUri, dispatch);
+  };
+
   const voiceOption = useSelector((state) => state.voiceOption.voiceOption);
+
   return (
     <View style={styles.card}>
       <View style={styles.cardDetailContainer}>
@@ -36,8 +40,15 @@ const Card = ({ noice }) => {
             onPress={handleOnPressPlay}
             id={noice.item.id}
           />
-          <TouchableOpacity style={styles.favoriteIcon}>
-            <Ionicons name="star-outline" color="#000000" size={20} />
+          <TouchableOpacity
+            style={styles.favoriteIcon}
+            onPress={handleOnPressFavorite}
+          >
+            <Ionicons
+              name={noice.item.isFavorite ? "star" : "star-outline"}
+              color="#000000"
+              size={20}
+            />
           </TouchableOpacity>
         </View>
       </View>

@@ -66,3 +66,16 @@ export const getNoice = (id) => {
     });
   });
 };
+
+export const toggleFavorite = (id, isFavorite) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "update noice set isFavorite=? where id = ?;",
+        [isFavorite, id],
+        (_, result) => resolve(result),
+        (_, err) => reject(err)
+      );
+    });
+  });
+};

@@ -1,8 +1,13 @@
 import * as FileSystem from "expo-file-system";
-import { fetchNoices, insertNoice } from "../../helpers/database/noiceDatabase";
+import {
+  fetchNoices,
+  insertNoice,
+  toggleFavorite,
+} from "../../helpers/database/noiceDatabase";
 
 export const ADD_NOICES = "ADD_NOICES";
 export const GET_NOICES = "GET_NOICES";
+export const TOGGLE_FAVORITE = "TOGGLE_FAVORITE";
 
 export const addNoiceAction = (id, title, note, audioUri, voiceDuration) => {
   return async (dispatch) => {
@@ -42,5 +47,16 @@ export const getNoiceAction = () => {
       console.log(e);
       throw e;
     }
+  };
+};
+
+export const toggleFavoriteAction = (id, isFavorite) => {
+  return async (dispatch) => {
+    const favoriteValue = isFavorite ? 0 : 1;
+    await toggleFavorite(id, favoriteValue);
+    dispatch({
+      type: TOGGLE_FAVORITE,
+      payload: { id, isFavorite: favoriteValue },
+    });
   };
 };
