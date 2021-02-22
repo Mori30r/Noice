@@ -19,15 +19,16 @@ const HomeScreen = (props) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getNoiceAction());
-  }, []);
-
+  }, [noices]);
   const noices = useSelector((state) => state.noice.noices);
+
   const showSuccessfulToast = () => {
     ToastAndroid.show(
       "Your New Noice Added Successfully !",
       ToastAndroid.SHORT
     );
   };
+
   return (
     <View style={styles.container}>
       <FloatingActionButton onPress={() => props.navigation.navigate("add")} />

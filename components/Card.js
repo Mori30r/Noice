@@ -4,11 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import VoiceContainer from "./VoiceContainer";
 import { playRecordedAudio } from "../helpers/audio/playRecordedAudio";
 import { setVoiceID } from "../store/actions/voiceOptionActions";
-import { toggleFavoriteAction } from "../store/actions/noiceActions";
+import {
+  removeNoiceAction,
+  toggleFavoriteAction,
+} from "../store/actions/noiceActions";
 import Icon from "./Icon";
 
 const Card = ({ noice }) => {
-  console.log(noice);
   const dispatch = useDispatch();
 
   const handleOnPressFavorite = async () => {
@@ -29,7 +31,7 @@ const Card = ({ noice }) => {
         iconName={"trash-outline"}
         iconColor={"red"}
         iconSize={25}
-        onPress={() => {}}
+        onPress={() => dispatch(removeNoiceAction(noice.item.id))}
       />
       <View style={styles.card}>
         <View style={styles.cardDetailContainer}>

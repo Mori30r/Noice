@@ -1,6 +1,7 @@
 import {
   ADD_NOICES,
   GET_NOICES,
+  REMOVE_NOICE,
   TOGGLE_FAVORITE,
 } from "../actions/noiceActions";
 import { Noice } from "../../models/Noice";
@@ -38,6 +39,10 @@ export const noiceReducers = (state = initialState, action) => {
             ? { ...thisNoice, isFavorite: action.payload.isFavorite }
             : item
         ),
+      };
+    case REMOVE_NOICE:
+      return {
+        noices: state.noices.filter((item) => item.id !== action.payload),
       };
     default:
       return state;

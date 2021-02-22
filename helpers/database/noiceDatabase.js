@@ -79,3 +79,16 @@ export const toggleFavorite = (id, isFavorite) => {
     });
   });
 };
+
+export const removeNoice = (id) => {
+  return new Promise((resolve, reject) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "delete from noice where id=?;",
+        [id],
+        (_, result) => resolve(result),
+        (_, err) => reject(err)
+      );
+    });
+  });
+};
