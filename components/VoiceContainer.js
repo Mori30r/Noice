@@ -23,7 +23,7 @@ const VoiceContainer = ({ onPress, seconds, position, id }) => {
       </TouchableOpacity>
       <Slider
         // position ? position : 0
-        value={id === voiceOption.id || "add-screen" ? position : 0}
+        value={id === voiceOption.id || id === "add-screen" ? position : 0}
         // onValueChange={(value) => setSliderValue(value)}
         style={styles.voiceSlider}
         minimumValue={0}
